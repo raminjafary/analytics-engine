@@ -1,0 +1,57 @@
+{
+  "name": "@raminjafary/analytics-engine",
+  "version": "1.0.0",
+  "description": "A comprehensive analytics engine with multiple provider support",
+  "type": "module",
+  "main": "./dist/analytics-engine.cjs.js",
+  "module": "./dist/analytics-engine.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/analytics-engine.es.js",
+      "require": "./dist/analytics-engine.cjs.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "examples": "vite --config examples/vite.config.ts",
+    "examples:build": "vite build --config examples/vite.config.ts",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "lint": "eslint src tests --ext .ts,.tsx",
+    "lint:fix": "eslint src tests --ext .ts,.tsx --fix",
+    "format": "prettier --write src tests",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "analytics",
+    "tracking",
+    "amplitude",
+    "google-analytics",
+    "context",
+    "utm"
+  ],
+  "author": "raminjafary",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@types/node": "^24.5.2",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
+    "@vitest/ui": "^3.2.4",
+    "eslint": "^9.36.0",
+    "jsdom": "^27.0.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4"
+  }
+}
