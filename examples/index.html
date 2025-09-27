@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Engine - Interactive Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .example-card h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .example-card p {
+            color: #718096;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .log-container {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+
+        .log-entry.error {
+            color: #dc3545;
+        }
+
+        .log-entry.warn {
+            color: #ffc107;
+        }
+
+        .log-entry.info {
+            color: #17a2b8;
+        }
+
+        .log-entry.debug {
+            color: #6c757d;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .highlight {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Analytics Engine</h1>
+            <p>Interactive Examples & Testing Playground</p>
+        </div>
+
+        <div class="examples-grid">
+            <!-- Basic Analytics Example -->
+            <div class="example-card">
+                <h3>📊 Basic Analytics</h3>
+                <p>Track user interactions and page views with automatic UTM parameter detection.</p>
+                
+                <div class="button-group">
+                    <button class="btn" onclick="trackPageView()">Track Page View</button>
+                    <button class="btn btn-secondary" onclick="trackUserAction()">User Action</button>
+                    <button class="btn btn-success" onclick="trackPurchase()">Purchase Event</button>
+                </div>
+
+                <div id="basic-status" class="status info" style="display: none;">
+                    Analytics engine initialized and ready!
+                </div>
+
+                <div class="metrics">
+                    <div class="metric-card">
+                        <div class="metric-value" id="basic-events">0</div>
+                        <div class="metric-label">Events Tracked</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="basic-providers">0</div>
+                        <div class="metric-label">Active Providers</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Configuration -->
+            <div class="example-card">
+                <h3>⚙️ Advanced Configuration</h3>
+                <p>Configure multiple providers, custom context, and performance monitoring.</p>
+                
+                <div class="button-group">
+                    <button class="btn" onclick="setupAdvancedConfig()">Setup Advanced</button>
+                    <button class="btn btn-secondary" onclick="addCustomProvider()">Add Custom Provider</button>
+                    <button class="btn btn-warning" onclick="testPerformance()">Performance Test</button>
+                </div>
+
+                <div id="advanced-status" class="status info" style="display: none;">
+                    Advanced configuration loaded with performance monitoring enabled.
+                </div>
+
+                <div class="metrics">
+                    <div class="metric-card">
+                        <div class="metric-value" id="advanced-queue">0</div>
+                        <div class="metric-label">Queue Size</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="advanced-performance">0ms</div>
+                        <div class="metric-label">Avg Response</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Handling -->
+            <div class="example-card">
+                <h3>🛡️ Error Handling</h3>
+                <p>Test robust error handling and recovery mechanisms.</p>
+                
+                <div class="button-group">
+                    <button class="btn btn-danger" onclick="simulateError()">Simulate Error</button>
+                    <button class="btn btn-warning" onclick="testRetry()">Test Retry</button>
+                    <button class="btn" onclick="recoverFromError()">Recover</button>
+                </div>
+
+                <div id="error-status" class="status error" style="display: none;">
+                    Error simulation active - check console for details.
+                </div>
+
+                <div class="log-container" id="error-log">
+                    <div class="log-entry info">Error handling system ready...</div>
+                </div>
+            </div>
+
+            <!-- Real-time Monitoring -->
+            <div class="example-card">
+                <h3>📈 Real-time Monitoring</h3>
+                <p>Monitor analytics performance and queue status in real-time.</p>
+                
+                <div class="button-group">
+                    <button class="btn" onclick="startMonitoring()">Start Monitoring</button>
+                    <button class="btn btn-secondary" onclick="stopMonitoring()">Stop Monitoring</button>
+                    <button class="btn btn-success" onclick="exportMetrics()">Export Data</button>
+                </div>
+
+                <div id="monitoring-status" class="status info" style="display: none;">
+                    Real-time monitoring active - updating every 1 second.
+                </div>
+
+                <div class="log-container" id="monitoring-log">
+                    <div class="log-entry info">Monitoring dashboard ready...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Examples -->
+        <div class="example-card">
+            <h3>💻 Code Examples</h3>
+            <p>Copy and paste these examples into your own projects.</p>
+
+            <h4>Basic Setup</h4>
+            <div class="code-block">
+                <pre><code>import { AnalyticsEngine, BrowserContextProvider, BrowserStorageAdapter } from '@raminjafary/analytics-engine';
+
+const engine = new AnalyticsEngine({
+  maxQueueSize: 1000,
+  batchTimeout: 2000,
+  lazyLoading: true,
+  debug: true
+});
+
+const contextProvider = BrowserContextProvider.getInstance();
+engine.setContextProvider(contextProvider);
+
+engine.addProvider(amplitudeProvider, 'amplitude');
+engine.addProvider(gaProvider, 'google-analytics');
+
+engine.send('page_view', { page: '/home' });
+engine.send('user_action', { action: 'click', element: 'button' });</code></pre>
+            </div>
+
+            <h4>Custom Provider</h4>
+            <div class="code-block">
+                <pre><code>import { BaseAnalyticsAdapter } from '@raminjafary/analytics-engine';
+
+class CustomAnalyticsAdapter extends BaseAnalyticsAdapter {
+  async load(callback) {
+    await this.loadCustomSDK();
+    this.isLoaded = true;
+    callback?.();
+  }
+
+  init() {
+    this.customSDK.init(this.apiKey);
+    this.isInitialized = true;
+  }
+
+  send(eventName, options) {
+    this.customSDK.track(eventName, options);
+  }
+}
+
+const customProvider = new CustomAnalyticsAdapter();
+engine.addProvider(customProvider, 'custom-analytics');</code></pre>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Built with ❤️ using the Analytics Engine library</p>
+            <p>Check the browser console for detailed logs and debugging information</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            AnalyticsEngine, 
+            BrowserContextProvider, 
+            BrowserStorageAdapter
+        } from '../src/index.js';
+        
+        import { AmplitudeAdapter } from './AmplitudeAdapter.js';
+        import { GoogleAnalyticsAdapter } from './GoogleAnalyticsAdapter.js';
+
+        let analyticsEngine;
+        let eventCount = 0;
+        let monitoringInterval;
+
+        async function initializeAnalytics() {
+            try {
+                analyticsEngine = new AnalyticsEngine({
+                    maxQueueSize: 1000,
+                    batchTimeout: 2000,
+                    lazyLoading: true,
+                    debug: true
+                });
+
+                const contextProvider = BrowserContextProvider.getInstance();
+                analyticsEngine.setContextProvider(contextProvider);
+
+                const amplitudeProvider = new AmplitudeAdapter({
+                    apiKey: 'demo-api-key',
+                    options: {
+                        defaultTracking: { sessions: true, attribution: true }
+                    }
+                });
+
+                const gaProvider = new GoogleAnalyticsAdapter({
+                    measurementId: 'G-DEMO123456'
+                });
+
+                analyticsEngine.addProvider(amplitudeProvider, 'amplitude');
+                analyticsEngine.addProvider(gaProvider, 'google-analytics');
+
+                showStatus('basic-status', 'Analytics engine initialized and ready!', 'success');
+                updateBasicMetrics();
+            } catch (error) {
+                console.error('Failed to initialize analytics:', error);
+                showStatus('basic-status', 'Failed to initialize analytics engine', 'error');
+            }
+        }
+
+        function trackPageView() {
+            if (!analyticsEngine) return;
+            
+            analyticsEngine.send('page_view', {
+                page: window.location.pathname,
+                title: document.title,
+                url: window.location.href,
+                timestamp: Date.now()
+            });
+            
+            eventCount++;
+            updateBasicMetrics();
+            showStatus('basic-status', `Page view tracked! Total events: ${eventCount}`, 'success');
+        }
+
+        function trackUserAction() {
+            if (!analyticsEngine) return;
+            
+            analyticsEngine.send('user_action', {
+                action: 'button_click',
+                element: 'interactive_button',
+                timestamp: Date.now(),
+                user_agent: navigator.userAgent
+            });
+            
+            eventCount++;
+            updateBasicMetrics();
+            showStatus('basic-status', `User action tracked! Total events: ${eventCount}`, 'success');
+        }
+
+        function trackPurchase() {
+            if (!analyticsEngine) return;
+            
+            analyticsEngine.send('purchase', {
+                transaction_id: 'txn_' + Date.now(),
+                value: 99.99,
+                currency: 'USD',
+                items: [
+                    { id: 'item_1', name: 'Premium Plan', category: 'subscription', quantity: 1, price: 99.99 }
+                ],
+                timestamp: Date.now()
+            });
+            
+            eventCount++;
+            updateBasicMetrics();
+            showStatus('basic-status', `Purchase tracked! Total events: ${eventCount}`, 'success');
+        }
+
+        function setupAdvancedConfig() {
+            if (!analyticsEngine) return;
+            
+            analyticsEngine.setGlobalProperties({
+                app_version: '1.0.0',
+                environment: 'demo',
+                user_type: 'premium'
+            });
+
+            analyticsEngine.setUserId('demo_user_' + Date.now());
+
+            showStatus('advanced-status', 'Advanced configuration applied!', 'success');
+            updateAdvancedMetrics();
+        }
+
+        function addCustomProvider() {
+            if (!analyticsEngine) return;
+            
+            const customProvider = {
+                init() { this.isInitialized = true; },
+                async load(callback) { 
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    this.isLoaded = true; 
+                    callback?.(); 
+                },
+                send(eventName, options) {
+                    console.log('Custom provider received:', eventName, options);
+                }
+            };
+
+            analyticsEngine.addProvider(customProvider, 'custom-provider');
+            showStatus('advanced-status', 'Custom provider added!', 'success');
+            updateAdvancedMetrics();
+        }
+
+        function testPerformance() {
+            if (!analyticsEngine) return;
+            
+            const startTime = performance.now();
+            const events = [];
+            
+            for (let i = 0; i < 100; i++) {
+                analyticsEngine.send('performance_test', { iteration: i, timestamp: Date.now() });
+                events.push(i);
+            }
+            
+            const endTime = performance.now();
+            const duration = Math.round(endTime - startTime);
+            
+            showStatus('advanced-status', `Performance test completed! 100 events in ${duration}ms`, 'success');
+            updateAdvancedMetrics();
+        }
+
+        function simulateError() {
+            if (!analyticsEngine) return;
+            
+            const failingProvider = {
+                init() { this.isInitialized = true; },
+                async load(callback) { 
+                    throw new Error('Simulated provider failure');
+                },
+                send(eventName, options) {
+                    throw new Error('Simulated send failure');
+                }
+            };
+
+            analyticsEngine.addProvider(failingProvider, 'failing-provider');
+            analyticsEngine.send('error_test', { test: true });
+            
+            showStatus('error-status', 'Error simulation active - check console for details.', 'error');
+            addLogEntry('error-log', 'Simulated error injected into analytics engine', 'error');
+        }
+
+        function testRetry() {
+            if (!analyticsEngine) return;
+            
+            analyticsEngine.send('retry_test', { attempt: 1, timestamp: Date.now() });
+            addLogEntry('error-log', 'Retry mechanism tested - events will be queued and retried', 'info');
+        }
+
+        function recoverFromError() {
+            if (!analyticsEngine) return;
+            
+            analyticsEngine.removeProvider('failing-provider');
+            showStatus('error-status', 'Error recovery completed - failing provider removed', 'success');
+            addLogEntry('error-log', 'System recovered from error state', 'success');
+        }
+
+        function startMonitoring() {
+            if (monitoringInterval) return;
+            
+            monitoringInterval = setInterval(() => {
+                const queueSize = analyticsEngine?.getQueueSize() || 0;
+                const metrics = analyticsEngine?.getPerformanceMetrics() || {};
+                
+                document.getElementById('advanced-queue').textContent = queueSize;
+                document.getElementById('advanced-performance').textContent = 
+                    Math.round(metrics.averageEventProcessingTime || 0) + 'ms';
+                
+                addLogEntry('monitoring-log', 
+                    `Queue: ${queueSize}, Events: ${metrics.totalEventsProcessed || 0}, Errors: ${metrics.totalErrors || 0}`, 
+                    'info'
+                );
+            }, 1000);
+            
+            showStatus('monitoring-status', 'Real-time monitoring active - updating every 1 second.', 'success');
+        }
+
+        function stopMonitoring() {
+            if (monitoringInterval) {
+                clearInterval(monitoringInterval);
+                monitoringInterval = null;
+            }
+            showStatus('monitoring-status', 'Monitoring stopped.', 'info');
+        }
+
+        function exportMetrics() {
+            const metrics = analyticsEngine?.getPerformanceMetrics() || {};
+            const data = {
+                timestamp: new Date().toISOString(),
+                queueSize: analyticsEngine?.getQueueSize() || 0,
+                totalEvents: metrics.totalEventsProcessed || 0,
+                averageProcessingTime: metrics.averageEventProcessingTime || 0,
+                errorRate: metrics.errorRate || 0
+            };
+            
+            console.log('Exported metrics:', data);
+            addLogEntry('monitoring-log', 'Metrics exported to console', 'success');
+        }
+
+        function showStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.className = `status ${type}`;
+                element.style.display = 'block';
+            }
+        }
+
+        function addLogEntry(containerId, message, level) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${level}`;
+                entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                container.appendChild(entry);
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        function updateBasicMetrics() {
+            document.getElementById('basic-events').textContent = eventCount;
+            document.getElementById('basic-providers').textContent = 
+                analyticsEngine ? Object.keys(analyticsEngine.providers || {}).length : 0;
+        }
+
+        function updateAdvancedMetrics() {
+            const queueSize = analyticsEngine?.getQueueSize() || 0;
+            const metrics = analyticsEngine?.getPerformanceMetrics() || {};
+            
+            document.getElementById('advanced-queue').textContent = queueSize;
+            document.getElementById('advanced-performance').textContent = 
+                Math.round(metrics.averageEventProcessingTime || 0) + 'ms';
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeAnalytics);
+
+        if (!window.location.search.includes('utm_')) {
+            const url = new URL(window.location);
+            url.searchParams.set('utm_source', 'demo');
+            url.searchParams.set('utm_medium', 'web');
+            url.searchParams.set('utm_campaign', 'analytics_engine_demo');
+            url.searchParams.set('utm_content', 'interactive_examples');
+            window.history.replaceState({}, '', url);
+        }
+    </script>
+</body>
+</html>
